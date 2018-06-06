@@ -1,0 +1,152 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(tidyverse)
+
+
+```
+
+
+```{r}
+getwd()
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+```{r}
+accurate_p <- read_csv("../DATA/accurate_proportions.csv")
+```
+
+```{r}
+spec(accurate_p)
+```
+```{r}
+y <- cbind(accurate_p$is_this_useful_yes, accurate_p$is_this_useful_no)
+```
+
+```{r}
+model <- glm(y~accurate_p$spelling_grammar, family='binomial')
+model1 <- glm(y~log(accurate_p$spelling_grammar +1), family='binomial')
+summary(model)
+```
+There are proportionally more yes-useful responses at lower spelling_grammar scores.
+
+We can see if log transofmration of the explanatory var reduces the residual deviance below 69873
+```{r}
+summary(model1)
+```
+There is a bit of an improement.
+```{r}
+model2 <- glm(y~log(accurate_p$spelling_grammar+1)+
+                log(accurate_p$errors+1)+
+                log(accurate_p$style+1)+
+                log(accurate_p$number_of_pdfs+1)+
+                log(accurate_p$number_of_word_files+1)+
+                as.factor(accurate_p$document_type)+
+                log(accurate_p$string_length+1)+
+                log(accurate_p$sentence_count+1)+
+                log(accurate_p$word_count+1), 
+              family='binomial')
+summary(model2)
+```
+
+```{r}
+40588/526
+```
+Resisual devance lowered to 40,588. It is assumed that the residual deviance is the same as the residual degrees of freedom. If the residual deviance is larger than the residual degrees of freedom, this is called overdispersion. It means that there is extra unexplained vairation, over and aboce the binomixla vairance assumed by the model speicification. 
+
+This model i ot sound, the overdisperison facotr is 77. The simplest way to take this into account is to use an 'empirical scale parameter' to reflect the fact that the errors are not binomial as well assumed but are lager than this (overdispersed) by a facotr of 77. We refit the model using quaisbinomial to account for overdispersion
+
+```{r}
+model3 <- glm(y~log(accurate_p$spelling_grammar+1)+
+                log(accurate_p$errors+1)+
+                log(accurate_p$style+1)+
+                log(accurate_p$number_of_pdfs+1)+
+                log(accurate_p$number_of_word_files+1)+
+                as.factor(accurate_p$document_type)+
+                log(accurate_p$string_length+1)+
+                log(accurate_p$sentence_count+1)+
+                log(accurate_p$word_count+1), 
+              quasibinomial)
+summary(model3)
+```
+```{r}
+levels(as.factor(accurate_p$document_type))
+```
+
+```{r}
+plot(model3)
+
+```
+```{r}
+plot_model(model3)
+```
+
+```{r}
+model4 <- glm(y~accurate_p$readability_score+
+                accurate_p$contractions_count+
+                accurate_p$equality_count+
+                accurate_p$indefinite_article_count+
+                accurate_p$passive_count+
+                accurate_p$profanities_count+
+                accurate_p$redundant_acronyms_count+
+                accurate_p$repeated_words_count+
+                accurate_p$simplify_count+
+                accurate_p$spell_count+
+                log(accurate_p$string_length+1)+
+                log(accurate_p$sentence_count+1)+
+                log(accurate_p$word_count+1), 
+              family='quasibinomial')
+summary(model4)
+```
+status = col_character(),
+  readability_score = col_double(),
+  contractions_count = col_double(),
+  equality_count = col_double(),
+  indefinite_article_count = col_double(),
+  passive_count = col_double(),
+  profanities_count = col_double(),
+  redundant_acronyms_count = col_double(),
+  repeated_words_count = col_double(),
+  simplify_count = col_double(),
+  spell_count = col_double(),
+  string_length = col_double(),
+  sentence_count = col_double(),
+  word_count = col_double()
+```{r}
+model5 <- glm(y~log(accurate_p$spelling_grammar+1)+
+                log(accurate_p$errors+1)+
+                log(accurate_p$style+1)+
+                log(accurate_p$number_of_pdfs+1)+
+                log(accurate_p$number_of_word_files+1)+
+                log(accurate_p$string_length+1)+
+                log(accurate_p$sentence_count+1)+
+                log(accurate_p$word_count+1), 
+              quasibinomial)
+summary(model5)
+```
+
+```{r}
+model6 <- glm(y~log(accurate_p$readability_score_scaled+1)+
+                log(accurate_p$contractions_count_scaled+1)+
+                log(accurate_p$equality_count_scaled+1)+
+                log(accurate_p$indefinite_article_count_scaled+1)+
+                log(accurate_p$passive_count_scaled+1)+
+                log(accurate_p$profanities_count_scaled+1)+
+                log(accurate_p$redundant_acronyms_count_scaled+1)+
+                log(accurate_p$repeated_words_count_scaled+1)+
+                log(accurate_p$simplify_count_scaled+1)+
+                log(accurate_p$spell_count_scaled+1)+
+                log(accurate_p$string_length+1)+
+                log(accurate_p$sentence_count+1)+
+                log(accurate_p$word_count+1), 
+              family='quasibinomial')
+summary(model6)
+```
