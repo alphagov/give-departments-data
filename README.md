@@ -5,6 +5,12 @@ date: "5/23/2018"
 
 ---
 
+This repo contains the notebooks behind the exploratory data analysis (EDA) which was conducted on GOV.UK warehouse data (extracted 15MAY18) for the data-informed-content team. The presentation can be found here: 
+
+https://docs.google.com/presentation/d/18pYJY0gpOJHVZtUJ-mQzUiuIlWO3XZfjcIYFpLdd3sg/edit#slide=id.g3bbbc926d1_5_0
+
+In order to reproduce or update these analyses, follow the instructions below:
+
 Clone this repo and mkdir DATA outside of repo
 
 ## Get a recent download of the warehouse data
@@ -16,10 +22,10 @@ https://trello.com/c/I1LA2tB2/319-05-science-time-where-is-my-data
 Download and unzip the CPM-*.dump.gz and
 move it to DATA directory
 
-Create the database
-`createdb DATABASE_NAME`
-Import data into database
-`psql -d DATABASE_NAME -f DATA/CPM-*.dump`
+Create the local database:  
+`createdb DATABASE_NAME`  
+Import data into database:  
+`psql -d DATABASE_NAME -f DATA/CPM-*.dump`  
 
 
 Set environment variables:
@@ -55,6 +61,7 @@ Replacing the --name parameter as appropriate.
 You should now be able to see your kernel in the IPython notebook menu: Kernel -> Change kernel and be able so switch to it (you may need to refresh the page before it appears in the list). IPython will remember which kernel to use for that notebook from then on.
 
 ## Exploratory data analysis notebooks
+The exploratory data analysis is split over several jupyter notebooks so that it's easier to find things and quicker to run them. They're listed in here in a reasonable order if browsing the whole EDA. 
 
 | Notebook        | contents                                                                             | 
 | ------------- |-------------| 
