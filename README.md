@@ -28,13 +28,20 @@ Import data into database:
 `psql -d DATABASE_NAME -f DATA/CPM-*.dump`  
 
 
-Set environment variables:
+## Set environment variables:
 
 ```
 export DATADIR="../DATA"
 export LOGGING_CONFIG="$PWD/python/logging.conf"
 export ENGINE="postgresql://USERNAME@localhost:5432/DATABASE_NAME"
+
 ```
+
+## Python environment:
+Python 3.6.5
+
+Install python packages using
+`pip3 install -r requirements.txt`
 
 ## Preparing the data for exploratory data analyses
 
